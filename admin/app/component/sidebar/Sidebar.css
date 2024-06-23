@@ -7,9 +7,6 @@
   background-color: #f4f4f4;
   padding: 20px;
   border-right: 1px solid #e0e0e0;
-  position: fixed;
-  top: 60px;
-  left: 0;
 }
 
 .sidebar-item {
@@ -24,6 +21,10 @@
 }
 
 .sidebar-item:hover {
+  background-color: #e0e0e0;
+}
+
+.sidebar-item.active {
   background-color: #e0e0e0;
 }
 

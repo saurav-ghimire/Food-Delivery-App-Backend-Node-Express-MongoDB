@@ -1,5 +1,13 @@
+
+export const metadata = {
+  title: "Admin Page",
+  description: "Welcome to Admin Page",
+};
+
 import { Inter } from "next/font/google";
 import "./globals.css";
+
+
 import Navbar from "./component/navbar/Navbar";
 import Sidebar from "./component/sidebar/Sidebar";
 

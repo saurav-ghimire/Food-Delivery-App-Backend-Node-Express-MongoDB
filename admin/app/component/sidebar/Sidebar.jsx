@@ -1,19 +1,30 @@
-// components/sidebar/Sidebar.js
+
+"use client"
 import { assets } from '@/app/assets/assets';
 import './Sidebar.css';
 import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 
 function Sidebar() {
+  const path  = usePathname();
   return (
     <aside className="sidebar">
-      <div className="sidebar-item">
-        <Image src={assets.add_icon} alt="Add" width={24} height={24} />
-        <span>Add Item</span>
-      </div>
-      <div className="sidebar-item">
+      
+      <Link href="/add">
+        <div className={`sidebar-item ${path === '/add' ? 'active' : ''}`}>
+          <Image src={assets.add_icon} alt="Add" width={24} height={24} />
+          <span>Add Item</span>
+        </div>
+      </Link>
+      <Link href="/list">
+      <div className={`sidebar-item ${path === '/list' ? 'active' : ''}`}>
         <Image src={assets.order_icon} alt="Order" width={24} height={24} />
         <span>Order List</span>
       </div>
+      </Link>
+
       <div className="sidebar-item">
         <Image src={assets.parcel_icon} alt="Parcel" width={24} height={24} />
         <span>Parcel</span>

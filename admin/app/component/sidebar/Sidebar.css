@@ -1,0 +1,36 @@
+/* components/sidebar/Sidebar.css */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  height: calc(100vh - 60px);
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-right: 1px solid #e0e0e0;
+  position: fixed;
+  top: 60px;
+  left: 0;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+.sidebar-item:hover {
+  background-color: #e0e0e0;
+}
+
+.sidebar-item img {
+  margin-right: 10px;
+}
+
+.sidebar-item span {
+  font-weight: bold;
+}

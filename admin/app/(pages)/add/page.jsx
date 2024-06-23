@@ -1,8 +1,11 @@
+"use client"
 import { assets } from '@/app/assets/assets';
 import './Add.css';
 import Image from 'next/image';
+import { useState } from 'react';
 
 function Add() {
+  const [image, setImage] = useState(false);
   return (
     <div className="add-food-form">
       <h2>Add Food Item</h2>
@@ -36,9 +39,11 @@ function Add() {
         <div className="form-group">
           <label htmlFor="food-image">Upload Image</label>
           <label className="upload-area" htmlFor="food-image">
-            <Image src={assets.upload_area} alt="Upload Area" width={150} height={100} />
+            <Image src={ image?URL.createObjectURL(image) : assets.upload_area} alt="Upload Area" width={150} height={100} />
           </label>
-          <input type="file" id="food-image" name="food-image" accept="image/*" style={{ display: 'none' }} required />
+          <input type="file" onChange={(e) => {
+            setImage(e.target.files[0])
+          }} id="food-image" name="food-image" accept="image/*" style={{ display: 'none' }} required />
         </div>
 
         <button type="submit" className="submit-button">Add Food Item</button>

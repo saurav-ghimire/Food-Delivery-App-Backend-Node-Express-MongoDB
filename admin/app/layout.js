@@ -12,6 +12,8 @@ import Navbar from "./component/navbar/Navbar";
 import Sidebar from "./component/sidebar/Sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function RootLayout({ children }) {
   return (
@@ -26,6 +28,7 @@ export default function RootLayout({ children }) {
             </div>
           </div>
         </div>
+        <ToastContainer />
       </body>
     </html>
   );

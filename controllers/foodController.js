@@ -5,7 +5,7 @@ import foodModel from '../models/foodModel.js';
 
 const addFood = async (req,res) => {
 
-  const imageFileName = `${req.file.filename}`;
+  const imageFileName = req?.file?.filename;
   const food = new foodModel({
     name:req.body.name,
     description:req.body.description,

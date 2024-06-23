@@ -93,3 +93,65 @@
 .delete-button:hover {
   background-color: #c82333; /* Darker Red on hover */
 }
+
+
+/* Assuming 'popUp' class is already defined */
+.popup-wrapper{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, .3);
+  backdrop-filter: blur(10px);
+  height: 100%;
+  width: 100%;
+}
+.popUp {
+  
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  max-width: 500px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.popUp .button-wrapper{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.popUp button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.popUp button:first-child {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.popUp button:first-child:hover {
+  background-color: #0056b3;
+}
+
+.popUp button:last-child {
+  background-color: #dc3545;
+  color: #ffffff;
+}
+
+.popUp button:last-child:hover {
+  background-color: #c82333;
+}

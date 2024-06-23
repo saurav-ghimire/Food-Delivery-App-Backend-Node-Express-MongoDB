@@ -2,14 +2,16 @@
 "use client"
 
 import Image from 'next/image';
-import { assets } from '@/app/assets/assets'; // Adjust this import based on your project structure
 import './List.css'; // Ensure this path is correct for your CSS file
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const List = () => {
   const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
+  const [popup, setPopUp] = useState(false)
+  const [id, setId] = useState(null)
   const [foodItems, setFoodItems] = useState([]);
 
   useEffect(() => {
@@ -27,6 +29,25 @@ const List = () => {
       console.error('Error fetching food items:', error);
     }
   };
+
+  const deleteFood = async (id)=> {
+    try {
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/food/${id}`)
+      if(response.status === 200){
+        toast.success(response.data.message)  
+      }
+      fetchFoodItems();
+      setPopUp(!popup)
+
+    } catch (error) {
+      toast.error('Something Wrong')
+    }
+  }
+
+  const togglePopUp = (id) => {
+    setPopUp(!popup)
+    setId(id)
+  }
   
   return (
     <div className="list-page">
@@ -35,7 +56,7 @@ const List = () => {
         {foodItems.map((food) => (
           <div className="food-item" key={food._id}>
             <div className="food-image">
-              <img src={`${process.env.NEXT_PUBLIC_BACKEND_IMAGE_URL}/${food.image}`} alt="Food" />
+              <Image width={200} height={150} src={`${process.env.NEXT_PUBLIC_BACKEND_IMAGE_URL}/${food.image}`} alt="Food" />
             </div>
             <div className="food-details">
               <h3>{food.name}</h3>
@@ -45,11 +66,22 @@ const List = () => {
             </div>
             <div className="food-actions">
               <button className="edit-button">Edit</button>
-              <button className="delete-button">Delete</button>
+              <button className="delete-button" onClick={() => togglePopUp(food._id)}>Delete</button>
             </div>
           </div>
         ))}
       </div>
+      {
+        popup && <div className="popup-wrapper">
+        <div className='popUp'>
+          Are you sure you want to delete this item ?
+          <div className="button-wrapper">
+            <button onClick={togglePopUp}>Cancle</button>
+            <button onClick={() => deleteFood(id)}>Delete</button>
+          </div>
+        </div>
+        </div>
+      }
       
       
     </div>

@@ -1,0 +1,95 @@
+/* components/List.css */
+
+.list-page {
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.list-heading {
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  display: inline-block;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 20px;
+}
+
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.food-item {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.food-image {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+}
+
+.food-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.food-details {
+  padding: 20px;
+}
+
+.food-details h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.food-details p {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.food-actions {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.edit-button {
+  background-color: #28a745; /* Green for Edit */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin-right: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+  background-color: #218838; /* Darker Green on hover */
+}
+
+.delete-button {
+  background-color: #dc3545; /* Red for Delete */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin-right: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #c82333; /* Darker Red on hover */
+}

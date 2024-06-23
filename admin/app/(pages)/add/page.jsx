@@ -25,6 +25,21 @@ function Add() {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+      // Check if any required field is empty
+      const requiredFields = ['foodname', 'fooddescription', 'foodprice', 'foodcategory'];
+      const emptyFields = requiredFields.filter(field => !data[field]);
+  
+      if (emptyFields.length > 0) {
+        emptyFields.forEach(field => toast.error(`${field.replace('food', '')} is required.`));
+        return;
+      }
+      console.log(image)
+       // Check if image is empty
+    if (!image) {
+      toast.error('Image is required.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('name', data.foodname);
     formData.append('description', data.fooddescription);
@@ -40,6 +55,7 @@ function Add() {
           'Content-Type': 'multipart/form-data',
         },
       });
+      console.log('response:',  response)
       if (response.data.success) {
         setData({
           foodname: '',
@@ -73,7 +89,7 @@ function Add() {
             id="foodname"
             name="foodname"
             placeholder="Enter food name"
-            required
+            
           />
         </div>
 
@@ -85,7 +101,7 @@ function Add() {
             id="fooddescription"
             name="fooddescription"
             placeholder="Enter food description"
-            required
+            
           ></textarea>
         </div>
 
@@ -98,7 +114,7 @@ function Add() {
             id="foodprice"
             name="foodprice"
             placeholder="Enter food price"
-            required
+            
           />
         </div>
 
@@ -107,7 +123,7 @@ function Add() {
           <select
             id="foodcategory"
             name="foodcategory"
-            required
+            
             onChange={onChangeHandler}
             value={data.foodcategory}
           >
@@ -136,7 +152,7 @@ function Add() {
             name="foodimage"
             accept="image/*"
             style={{ display: 'none' }}
-            required
+            
           />
         </div>
 

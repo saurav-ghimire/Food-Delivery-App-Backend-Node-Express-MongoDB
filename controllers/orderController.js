@@ -29,8 +29,6 @@ const placeOrder = async (req, res) => {
       quantity: item.quantity
     }));
 
-    console.log(lineItems);
-
     lineItems.push({
       price_data: {
         currency: "CAD",
@@ -63,11 +61,12 @@ const placeOrder = async (req, res) => {
   }
 };
 
-  const verfiyOrder = async(req,res) => {
+  const verfiyOrder = async (req,res) => {
 
     const {orderId, success} = req.body;
+    
     try {
-      if(success=="true") {
+      if(success=="true") { 
         await orderModel.findByIdAndUpdate(orderId, {payment:true});
         res.json({success:true, message:"Paid"});
       }else{
@@ -81,7 +80,17 @@ const placeOrder = async (req, res) => {
 
   }
 
+  const userOrder = async (req, res) => {
+    try {
+      const orders = await orderModel.find({userId:req.body.userId});
+      res.json({success:true, data:orders})
+    } catch (error) {
+      console.log(error);
+      res.json({success:false, message:'Error'})
+    }
+  }
 export {
   placeOrder,
-  verfiyOrder
+  verfiyOrder,
+  userOrder
   };

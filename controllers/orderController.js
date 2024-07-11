@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
+import axios from "axios";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET);
 
@@ -89,8 +90,22 @@ const placeOrder = async (req, res) => {
       res.json({success:false, message:'Error'})
     }
   }
+
+  const allOrder = async (req,res) => {
+    try {
+   
+      const data = await orderModel.find();
+      if(data){
+        res.json({success:true, data});
+      }
+    } catch (error) {
+      console.log(error);
+      res.json({success:false, message:"Error"});
+    }
+  }
 export {
   placeOrder,
   verfiyOrder,
-  userOrder
+  userOrder,
+  allOrder
   };

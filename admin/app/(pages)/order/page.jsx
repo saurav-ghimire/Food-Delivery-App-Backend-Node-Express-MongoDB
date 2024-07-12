@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import './Order.css'
 function Order() {
   const [data, setData] = useState([]);
+  const [toggle, setToggle] = useState(false);
+  const [selectedOrder, setSelectedOrder]= useState();
+  const [orderId, setOrderId]= useState();
   const fetchData = async() => {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/order/total`);
     const data = response.data.data;
@@ -15,9 +18,38 @@ function Order() {
     fetchData();
   },[]);
 
+  const statusOptions = [
+    "Food Processing",
+    "Out for Delivery",
+    "Delivered / Picked Up",
+    "Cancelled",
+  ];
+
+ 
+  const showToggle = (event, id) => {
+    setToggle(!toggle);
+    setSelectedOrder(event.target.value);
+    setOrderId(id);
+  }
+
+  const updateOrder = async() => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/order/total`);
+  }
+
   return (
     <div className="orders-container">
-      <h2>All Orders</h2>
+      <h2>All Orders {`${toggle}`}</h2>
+      {
+        toggle && (
+          <div className="confirmation-wrapper">
+            <div className="confirmation-modal">
+              <p>Are you sure you want to update?</p>
+              <button onClick={updateOrder} >Yes</button>
+              <button onClick={() => {setToggle(!toggle)}} >No</button>
+            </div>
+          </div>
+        )
+      }
       {data.length > 0 ? (
         data.map((order) => (
           <div key={order._id} className="order-card">
@@ -49,7 +81,16 @@ function Order() {
                   </div>
               </div>
               <div className="track-order-button">
-                <button>Change Status</button>
+                <select name="orderstatus" id="" onChange={(event) => showToggle(event,order._id)}>
+                  <option value={order.status}>{order.status}</option>
+                  {statusOptions
+                  .filter(status => status !== order.status)
+                  .map(status => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>

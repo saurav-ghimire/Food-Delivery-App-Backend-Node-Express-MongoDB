@@ -2,6 +2,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import './Order.css'
+import { toast } from "react-toastify";
 function Order() {
   const [data, setData] = useState([]);
   const [toggle, setToggle] = useState(false);
@@ -33,7 +34,11 @@ function Order() {
   }
 
   const updateOrder = async() => {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/order/total`);
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/order/updateStatus`, {selectedOrder, orderId});
+    if(response.data.success === true){
+      toast.success(response.data.message);
+      setToggle(!toggle)
+    }
   }
 
   return (

@@ -103,9 +103,30 @@ const placeOrder = async (req, res) => {
       res.json({success:false, message:"Error"});
     }
   }
+
+  const updateStatus = async (req,res) => {
+    try {
+      const {selectedOrder,orderId} = req.body;
+      console.log(req.body)
+      console.log(selectedOrder)
+      console.log(orderId)
+      const orderExist = await orderModel.findById(orderId);
+      if(orderExist){
+        await orderModel.findByIdAndUpdate(orderId, {status:selectedOrder});
+        res.json({success:true, message:'Successfully Updated'})
+      }else{
+        res.json({success:false, message:'Order Not Found'})
+      }
+    } catch (error) {
+      console.log(error);
+      res.json({success:false, message:'Error'});
+    }
+  }
+
 export {
   placeOrder,
   verfiyOrder,
   userOrder,
-  allOrder
+  allOrder,
+  updateStatus
   };

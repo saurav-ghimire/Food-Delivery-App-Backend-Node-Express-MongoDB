@@ -51,8 +51,22 @@ const deleteFood = async(req,res) => {
   }
 }
 
+const getSingleFood =async(req,res) => {
+  try {
+    const {id} = req.params
+    const response = await foodModel.findById(id)
+    if(!response){
+      return res.json({success:false, messaage:'Food Not Found'});
+    }
+    res.json({success:true, response})
+  } catch (error) {
+    console.log(error);
+    res.json({success:false, messaage:'Error'})
+  }
+}
 export {
   addFood,
   getFoods,
-  deleteFood
+  deleteFood,
+  getSingleFood
 }

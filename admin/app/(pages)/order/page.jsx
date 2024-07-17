@@ -37,7 +37,8 @@ function Order() {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/order/updateStatus`, {selectedOrder, orderId});
     if(response.data.success === true){
       toast.success(response.data.message);
-      setToggle(!toggle)
+      setToggle(!toggle);
+      fetchData();
     }
   }
 

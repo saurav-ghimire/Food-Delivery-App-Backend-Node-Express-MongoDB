@@ -6,6 +6,7 @@ import './List.css'; // Ensure this path is correct for your CSS file
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import Link from 'next/link';
 
 const List = () => {
   const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
@@ -65,7 +66,7 @@ const List = () => {
               <p><strong>Category:</strong> {food.category}</p>
             </div>
             <div className="food-actions">
-              <button className="edit-button">Edit</button>
+              <Link href={`/edit/${food._id}`}><button className="edit-button">Edit</button></Link>
               <button className="delete-button" onClick={() => togglePopUp(food._id)}>Delete</button>
             </div>
           </div>

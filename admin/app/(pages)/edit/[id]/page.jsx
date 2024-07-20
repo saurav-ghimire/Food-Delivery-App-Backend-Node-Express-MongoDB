@@ -1,49 +1,82 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
-import './edit.css'
+import './edit.css';
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { assets } from '@/app/assets/assets';
 import Image from "next/image";
+import { toast } from 'react-toastify';
 
-function Edit({params}) {
+function Edit({ params }) {
   const url = process.env.NEXT_PUBLIC_BACKEND_API_URL;
-  const {id} = params;
+  const { id } = params;
   const router = useRouter();
-  const [rdata, setData] = useState();
+  const [rdata, setData] = useState({});
+  const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
   const fetchData = async () => {
-    const responseData = await axios.get(process.env.NEXT_PUBLIC_BACKEND_API_URL + `/api/food/${id}`);
-    console.log(responseData)
-    if(!responseData.data.success){
-      console.log(';err')
-      router.push('/list')
+    try {
+      const responseData = await axios.get(`${url}/api/food/${id}`);
+      if (!responseData.data.success) {
+        router.push('/list');
+      }
+      setData(responseData.data.response);
+      setImagePreview(responseData.data.response.image);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      router.push('/list');
     }
-    setData(responseData.data.response);
-    setImagePreview(responseData.data.response.image);
-
-
-  }
-  
-  
+  };
 
   useEffect(() => {
-    
     if (id) {
       fetchData();
     }
   }, [id]);
 
- 
-  
-  
-  
+  const onChangeHandler = (event) => {
+    const { name, value } = event.target;
+    setData(prevData => ({ ...prevData, [name]: value }));
+  };
 
-  const onSubmitHandler = async (event) => {}
-  const onChangeHandler = async (event) => {}
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
 
-  return ( 
+    // Create form data
+    const formData = new FormData();
+    formData.append('name', rdata.name);
+    formData.append('description', rdata.description);
+    formData.append('price', rdata.price);
+    formData.append('category', rdata.category);
+    if (image) {
+      formData.append('image', image);
+    }
+
+    try {
+      const response = await axios.put(`${url}/api/food/update/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.data.success) {
+        toast.success('Food item updated successfully!');
+        router.push('/list');
+      } else {
+        response.data.errors.forEach(error => toast.error(error));
+      }
+    } catch (error) {
+      console.error('There was an error!', error);
+      if (error.response && error.response.data && error.response.data.errors) {
+        error.response.data.errors.forEach(err => toast.error(err));
+      } else {
+        toast.error('Failed to update food item. Please try again.');
+      }
+    }
+  };
+
+  return (
     <div className="add-food-form">
       <h2>Edit {rdata?.name}</h2>
       <form onSubmit={onSubmitHandler}>
@@ -51,12 +84,11 @@ function Edit({params}) {
           <label htmlFor="foodname">Edit</label>
           <input
             onChange={onChangeHandler}
-            value={rdata?.name}
+            value={rdata?.name || ''}
             type="text"
             id="foodname"
-            name="foodname"
+            name="name"
             placeholder="Enter food name"
-            
           />
         </div>
 
@@ -64,11 +96,10 @@ function Edit({params}) {
           <label htmlFor="fooddescription">Description</label>
           <textarea
             onChange={onChangeHandler}
-            value={rdata?.description}
+            value={rdata?.description || ''}
             id="fooddescription"
-            name="fooddescription"
+            name="description"
             placeholder="Enter food description"
-            
           ></textarea>
         </div>
 
@@ -77,11 +108,10 @@ function Edit({params}) {
           <input
             type="number"
             onChange={onChangeHandler}
-            value={rdata?.price}
+            value={rdata?.price || ''}
             id="foodprice"
-            name="foodprice"
+            name="price"
             placeholder="Enter food price"
-            
           />
         </div>
 
@@ -89,10 +119,9 @@ function Edit({params}) {
           <label htmlFor="foodcategory">Category</label>
           <select
             id="foodcategory"
-            name="foodcategory"
-            
+            name="category"
             onChange={onChangeHandler}
-            value={rdata?.category}
+            value={rdata?.category || ''}
           >
             <option value="">Select category</option>
             <option value="appetizer">Appetizer</option>
@@ -105,25 +134,24 @@ function Edit({params}) {
         <div className="form-group">
           <label htmlFor="foodimage">Upload Image</label>
           <label className="upload-area" htmlFor="foodimage">
-          <Image
-            src={url/assets/imagePreview || `/${assets.upload_area}`}
-            alt="Upload Area"
-            width={150}
-            height={100}
-          />
+            <Image
+              src={imagePreview ? `${url}/images/${imagePreview}` : assets.upload_area}
+              alt="Upload Area"
+              width={150}
+              height={100}
+            />
           </label>
-          {/* <input
+          <input
             type="file"
-            // onChange={(e) => setImage(e.target.files[0])}
+            onChange={(e) => setImage(e.target.files[0])}
             id="foodimage"
             name="foodimage"
             accept="image/*"
             style={{ display: 'none' }}
-            
-          /> */}
+          />
         </div>
 
-        <button type="submit" className="submit-button">Add Food Item</button>
+        <button type="submit" className="submit-button">Update Food Item</button>
       </form>
     </div>
   );

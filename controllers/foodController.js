@@ -37,7 +37,9 @@ const getFoods =  async(req,res) => {
 const deleteFood = async(req,res) => {
   try {
     const id = req.params.id;
-    const foodExist = await foodModel.findById(id)
+    const foodExist = await foodModel.findById(id);
+    
+
     if(!foodExist){
       res.json({sucess:false, message: 'Food Not found'});  
     }
@@ -64,9 +66,57 @@ const getSingleFood =async(req,res) => {
     res.json({success:false, messaage:'Error'})
   }
 }
+
+const updateFood = async (req, res) => {
+  
+    const {id} = req.params;
+    const updatedData = {
+    name:req.body.name,
+    description:req.body.description,
+    price:req.body.price,
+    category:req.body.category
+  }
+ 
+  if (req.file){
+    const imageFileName = req.file.filename;
+    updatedData.image = imageFileName;
+    // Delete the old image
+    const foodExist = await foodModel.findById(id);
+    if (foodExist && foodExist.image) {
+      fs.unlink(`uploads/${foodExist.image}`, () => {});
+    }
+  }
+
+
+   // Validate required fields
+   const requiredFields = ['name', 'description', 'price', 'category'];
+   const errors = requiredFields
+     .filter(field => !updatedData[field])
+     .map(field => `${field} is required`);
+ 
+   if (errors.length > 0) {
+     return res.status(400).json({ success: false, errors });
+   }
+
+  console.log(updatedData);
+
+  try {
+    
+    const response = await foodModel.findByIdAndUpdate(id, updatedData, { new: true });
+    if (!response) {
+      return res.json({ success: false, message: 'Food Not Found' });
+    }
+    res.json({ success: true, message: 'Food Updated', response });
+    
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: 'Error While Updating' });
+  }
+}
 export {
   addFood,
   getFoods,
   deleteFood,
-  getSingleFood
+  getSingleFood,
+  updateFood
 }

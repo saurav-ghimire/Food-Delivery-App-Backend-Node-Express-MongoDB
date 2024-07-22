@@ -12,19 +12,19 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       
-      <Link href="/add">
+      <Link href="/dashboard/add">
         <div className={`sidebar-item ${path === '/add' ? 'active' : ''}`}>
           <Image src={assets.add_icon} alt="Add" width={24} height={24} />
           <span>Add Item</span>
         </div>
       </Link>
-      <Link href="/list">
+      <Link href="/dashboard/list">
       <div className={`sidebar-item ${path === '/list' ? 'active' : ''}`}>
         <Image src={assets.order_icon} alt="Order" width={24} height={24} />
         <span>Food List</span>
       </div>
       </Link>
-      <Link href="/order">
+      <Link href="/dashboard/order">
       <div className="sidebar-item">
         <Image src={assets.parcel_icon} alt="Order List" width={24} height={24} />
         <span>Order List</span>

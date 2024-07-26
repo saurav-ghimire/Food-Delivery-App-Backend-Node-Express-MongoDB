@@ -1,9 +1,10 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './Login.css';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import Cookies from 'js-cookie';
 import { storeToken, isToken } from '@/app/store/tokenSlice';
 
 export default function LoginPage() {
@@ -11,7 +12,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const dispatch = useDispatch();
-  const tokenExists = useSelector((state) => state.token);
 
   const handleEmail = (event) => {
     setEmail(event.target.value);
@@ -42,21 +42,15 @@ export default function LoginPage() {
       if (!response.data.success) {
         setError(response.data.message);
       } else {
-        dispatch(storeToken(response.data.token));
+        const token = response.data.token;
+        dispatch(storeToken(token));
+        Cookies.set('token', token, { expires: 7 }); // Set token in cookies for 7 days
         toast.success("Login successful");
       }
     } catch (error) {
       setError("Login failed");
     }
   };
-
-  useEffect(() => {
-    if (tokenExists) {
-      console.log("Token exists");
-    } else {
-      console.log("No token");
-    }
-  }, [tokenExists]);
 
   return (
     <div className="container">
@@ -90,7 +84,6 @@ export default function LoginPage() {
           
           <button type="submit" className="submit-button">Login</button>
         </form>
-        {tokenExists && <p>Token exists</p>}
       </div>
     </div>
   );

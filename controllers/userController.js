@@ -5,8 +5,8 @@ import validator from 'validator'
 
 
 // CreateToken
-const createToken = (id) => {
-  return jwt.sign({id}, process.env.JWT_SECRET)
+const createToken = (id, isAdmin) => {
+  return jwt.sign({id, isAdmin}, process.env.JWT_SECRET)
 }
 
 // login user
@@ -21,7 +21,7 @@ const loginUser = async (req, res) => {
     if(!isMatch){
       return res.json({success:false, message:"Wrong Credentials"});
     }
-    const token = createToken(user._id);
+    const token = createToken(user._id, user.isAdmin);
     res.json({success:true, token});
   } catch (error) {
     console.log(error);

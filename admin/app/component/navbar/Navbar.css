@@ -22,3 +22,7 @@
 .navbar-profile-img {
   border-radius: 50%;
 }
+
+.logout{display: inline-block; padding: 5px 10px; border-radius: 3px; background-color: orangered; color: #fff; border:2px solid orangered; transition: all linear .3s;}
+
+.logout:hover{background-color: transparent; color: orangered;}

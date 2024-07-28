@@ -3,7 +3,7 @@ import categoryModel from '../models/categoryModel.js';
 const addCategory = async (req, res) => {
   try {
     const { title } = req.body; 
-    const image = req.file.filename; 
+    const image = req?.file?.filename; 
     
     const category = new categoryModel({
       title,
@@ -24,6 +24,16 @@ const addCategory = async (req, res) => {
   }
 };
 
+const getAllCategory = async(req, res) => {
+  try {
+    const allCategory = await categoryModel.find({});
+    res.json({success:true, allCategory})
+  } catch (error) {
+    console.log('Error')
+    res.json({success:false, message:'Internal Server Error'})
+  }
+}
 export {
-  addCategory
+  addCategory,
+  getAllCategory
 };

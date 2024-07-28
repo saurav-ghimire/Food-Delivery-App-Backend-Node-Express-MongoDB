@@ -30,10 +30,16 @@ function Sidebar() {
         <span>Order List</span>
       </div>
       </Link>
-      <Link href="/dashboard/categories">
+      <Link href="/dashboard/allcategories">
       <div className="sidebar-item">
         <Image src={assets.upload_area} alt="Upload" width={24} height={24} />
         <span>Categories</span>
+      </div>
+      </Link>
+      <Link href="/dashboard/categories">
+      <div className="sidebar-item">
+        <Image src={assets.upload_area} alt="Upload" width={24} height={24} />
+        <span>Add Categories</span>
       </div>
       </Link>
     </aside>

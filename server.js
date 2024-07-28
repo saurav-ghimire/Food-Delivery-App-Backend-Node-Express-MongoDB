@@ -6,6 +6,7 @@ import userRouter from './routes/userRoutes.js';
 import { config } from 'dotenv';
 import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
+import categoryRouter from './routes/categoryRoute.js';
 
 
 // app config
@@ -25,6 +26,7 @@ app.use('/images', express.static('uploads'));
 app.use('/api/user', userRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter);
+app.use('/api/category', categoryRouter);
 app.get('/', (req, res) => {
   res.send({msg : 'i am the route'})
 })

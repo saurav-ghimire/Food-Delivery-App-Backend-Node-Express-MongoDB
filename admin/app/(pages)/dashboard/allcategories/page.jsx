@@ -65,7 +65,7 @@ const allCategories = () => {
               
             </div>
             <div className="food-actions">
-              <Link href={`dashboard/edit/${food._id}`}><button className="edit-button">Edit</button></Link>
+              <Link href={`edit-category/${food._id}`}><button className="edit-button">Edit</button></Link>
               <button className="delete-button" onClick={() => togglePopUp(food._id)}>Delete</button>
             </div>
           </div>

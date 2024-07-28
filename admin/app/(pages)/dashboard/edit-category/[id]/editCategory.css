@@ -1,0 +1,67 @@
+.edit-category-form {
+  width: 50%;
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+.edit-category-form h2 {
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  display: inline-block;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 20px;
+}
+
+.edit-category-form .form-group {
+  margin-bottom: 15px;
+}
+
+.edit-category-form .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.edit-category-form .form-group input,
+.edit-category-form .form-group textarea,
+.edit-category-form .form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-shadow: none;
+}
+
+.edit-category-form .form-group textarea {
+  resize: vertical;
+}
+
+.edit-category-form .upload-area {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.edit-category-form .upload-area img {
+  margin-right: 10px;
+}
+
+.edit-category-form .submit-button {
+  padding: 10px;
+  background-color: #0070f3;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-category-form .submit-button:hover {
+  background-color: #005bb5;
+}

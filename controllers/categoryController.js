@@ -1,4 +1,5 @@
 import categoryModel from '../models/categoryModel.js';
+import fs from 'fs';
 
 const addCategory = async (req, res) => {
   try {
@@ -33,7 +34,25 @@ const getAllCategory = async(req, res) => {
     res.json({success:false, message:'Internal Server Error'})
   }
 }
+const deleteCategory = async (req,res) => {
+  try {
+    const id = req.params.id;
+    const isExist = await categoryModel.findById(id);
+    if(!isExist){
+      res.json({sucess:false, message: 'Category Not found'});  
+    }
+    fs.unlink(`uploads/${isExist.image}`, ()=>{})
+    await categoryModel.findByIdAndDelete(id)
+    res.json({sucess:true, message: 'Category Successfully Deleted'});
+    
+  } catch (error) {
+    console.log(error)
+    res.json({success:false, message:'Internal Server Error'})
+    
+  }
+}
 export {
   addCategory,
-  getAllCategory
+  getAllCategory,
+  deleteCategory
 };

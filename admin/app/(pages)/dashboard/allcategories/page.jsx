@@ -33,7 +33,7 @@ const allCategories = () => {
 
   const deleteFood = async (id)=> {
     try {
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/categories/${id}`)
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/category/${id}`)
       if(response.status === 200){
         toast.success(response.data.message)  
       }
@@ -41,6 +41,7 @@ const allCategories = () => {
       setPopUp(!popup)
 
     } catch (error) {
+      console.log(error)
       toast.error('Something Wrong')
     }
   }

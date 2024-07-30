@@ -7,10 +7,12 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
+import { storeToken } from '@/app/store/tokenSlice';
+import { useSelector } from 'react-redux';
 
 const allCategories = () => {
   const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
-
+  const token = useSelector(storeToken);
   const [popup, setPopUp] = useState(false)
   const [id, setId] = useState(null)
   const [foodItems, setFoodItems] = useState([]);
@@ -33,7 +35,11 @@ const allCategories = () => {
 
   const deleteFood = async (id)=> {
     try {
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/category/${id}`)
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/category/${id}`, {
+        headers:{
+          token:token?.payload?.token
+        }
+      })
       if(response.status === 200){
         toast.success(response.data.message)  
       }

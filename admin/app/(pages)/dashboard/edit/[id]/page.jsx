@@ -6,9 +6,12 @@ import { useRouter } from "next/navigation";
 import { assets } from '@/app/assets/assets';
 import Image from "next/image";
 import { toast } from 'react-toastify';
+import { storeToken } from "@/app/store/tokenSlice"; 
+import { useSelector } from "react-redux";
 
 function Edit({ params }) {
   const url = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+  const token = useSelector(storeToken);
   const { id } = params;
   const router = useRouter();
   const [rdata, setData] = useState({});
@@ -17,15 +20,19 @@ function Edit({ params }) {
 
   const fetchData = async () => {
     try {
-      const responseData = await axios.get(`${url}/api/food/${id}`);
+      const responseData = await axios.get(`${url}/api/food/${id}`, {
+        headers: {
+          token: token?.payload?.token
+        }
+      });
       if (!responseData.data.success) {
-        router.push('/list');
+        router.push("/dashboard/list");
       }
       setData(responseData.data.response);
-      setImagePreview(responseData.data.response.image);
+      setImagePreview(`${url}/images/${responseData.data.response.image}`);
     } catch (error) {
       console.error('Error fetching data:', error);
-      router.push('/list');
+      router.push("/dashboard/list");
     }
   };
 
@@ -38,6 +45,14 @@ function Edit({ params }) {
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
     setData(prevData => ({ ...prevData, [name]: value }));
+  };
+
+  const onImageChangeHandler = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file)); // Update imagePreview with the new image URL
+    }
   };
 
   const onSubmitHandler = async (event) => {
@@ -57,12 +72,13 @@ function Edit({ params }) {
       const response = await axios.put(`${url}/api/food/update/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          token: token?.payload?.token
         },
       });
 
       if (response.data.success) {
         toast.success('Food item updated successfully!');
-        router.push('/list');
+        router.push("/dashboard/list");
       } else {
         response.data.errors.forEach(error => toast.error(error));
       }
@@ -133,9 +149,10 @@ function Edit({ params }) {
 
         <div className="form-group">
           <label htmlFor="foodimage">Upload Image</label>
+          
           <label className="upload-area" htmlFor="foodimage">
             <Image
-              src={imagePreview ? `${url}/images/${imagePreview}` : assets.upload_area}
+              src={imagePreview || assets.upload_area}
               alt="Upload Area"
               width={150}
               height={100}
@@ -143,7 +160,7 @@ function Edit({ params }) {
           </label>
           <input
             type="file"
-            onChange={(e) => setImage(e.target.files[0])}
+            onChange={onImageChangeHandler}
             id="foodimage"
             name="foodimage"
             accept="image/*"

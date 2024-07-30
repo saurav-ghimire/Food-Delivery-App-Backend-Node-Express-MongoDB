@@ -5,11 +5,12 @@ import Image from 'next/image';
 import { useState } from 'react';
 import axios from 'axios';
 import {toast } from 'react-toastify';
+import { storeToken } from '@/app/store/tokenSlice';
+import { useSelector } from 'react-redux';
 
 function Add() {
-
-
   const url = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+  const token = useSelector(storeToken);
   const [image, setImage] = useState(null);
   const [data, setData] = useState({
     foodname: '',
@@ -53,6 +54,7 @@ function Add() {
       const response = await axios.post(`${url}/api/food/add`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          token:token?.payload?.token
         },
       });
       console.log('response:',  response)

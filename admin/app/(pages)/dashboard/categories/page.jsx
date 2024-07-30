@@ -6,14 +6,15 @@ import './Categories.css';
 import axios from "axios";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { storeToken } from "@/app/store/tokenSlice";
+import { useSelector } from "react-redux";
 
 function Categories() {
   const [title, setTitle] = useState('');
   const [image, setImage] = useState(null);
-
+  const token = useSelector(storeToken);
   const handleTitle = (event) => {
     setTitle(event.target.value);
-    console.log(title);
   };
 
   const onSubmitHandler = async (event) => {
@@ -36,19 +37,21 @@ function Categories() {
       if (image) {
         formData.image = image;
       }
-      console.log(formData);
+      
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/category/add`, formData,{
         headers: {
           'Content-Type': 'multipart/form-data',
+          token:token?.payload?.token
         },
       });
-
+      console.log(response)
       if(response.data.success){
       toast.success('Category added successfully!');
       setTitle('');
       setImage(null);
     }
     } catch (error) {
+      console.log(error)
       if (error.response) {
         const finalError = error.response.data.message.split(',');
         finalError.forEach((data) => {

@@ -7,20 +7,28 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { storeToken } from "@/app/store/tokenSlice";
+import { useSelector } from "react-redux";
 
 function EditCategory({ params }) {
   const router = useRouter();
   const [data, setData] = useState({});
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const token = useSelector(storeToken)
 
   useEffect(() => {
     getCategory();
+    
   }, [params.id]);
 
   const getCategory = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/category/${params.id}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/category/${params.id}`, {
+        headers:{
+          token:token?.payload?.token
+        }
+      });
       
       if (!response.data.success) {
         toast.error(response.data.message);
@@ -64,6 +72,7 @@ function EditCategory({ params }) {
       const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/category/${params.id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          token:token?.payload?.token
         },
       });
 

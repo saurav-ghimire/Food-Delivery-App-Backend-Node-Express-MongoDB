@@ -13,10 +13,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage:storage})
 
+import authMiddeware from '../middleware/auth.js'
 
-categoryRouter.post('/add', upload.single('image') ,addCategory)
+categoryRouter.post('/add', authMiddeware ,upload.single('image') ,addCategory)
 categoryRouter.get('/all', getAllCategory)
-categoryRouter.get('/:id', getSingleCategory)
-categoryRouter.delete('/:id', deleteCategory)
-categoryRouter.put('/:id',upload.single('image'), updateCategory)
+categoryRouter.get('/:id', authMiddeware, getSingleCategory)
+categoryRouter.delete('/:id', authMiddeware,deleteCategory)
+categoryRouter.put('/:id',authMiddeware,upload.single('image'), updateCategory)
 export default categoryRouter;

@@ -7,9 +7,11 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
-
+import { storeToken } from '@/app/store/tokenSlice';
+import { useSelector } from 'react-redux';
 const List = () => {
   const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+  const token = useSelector(storeToken);
 
   const [popup, setPopUp] = useState(false)
   const [id, setId] = useState(null)
@@ -24,7 +26,6 @@ const List = () => {
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/food/foods`);
-      
       setFoodItems(response.data.data);
     } catch (error) {
       console.error('Error fetching food items:', error);
@@ -33,7 +34,11 @@ const List = () => {
 
   const deleteFood = async (id)=> {
     try {
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/food/${id}`)
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/food/${id}`,{
+        headers:{
+          token:token?.payload?.token
+        }
+      })
       if(response.status === 200){
         toast.success(response.data.message)  
       }

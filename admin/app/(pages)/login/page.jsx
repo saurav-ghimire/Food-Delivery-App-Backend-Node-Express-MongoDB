@@ -1,9 +1,9 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Login.css';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { storeToken } from '@/app/store/tokenSlice';
 import { useRouter } from 'next/navigation';
@@ -14,7 +14,14 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const token = useSelector(storeToken);
   const router = useRouter();
+  
+  useEffect(()=>{
+    if(token?.payload?.token){
+      router.push('/dashboard')
+    }
+  },[])
 
   const handleEmail = (event) => {
     setEmail(event.target.value);

@@ -1,4 +1,3 @@
-
 "use client"
 
 import Image from 'next/image';
@@ -9,17 +8,17 @@ import { toast } from 'react-toastify';
 import Link from 'next/link';
 import { storeToken } from '@/app/store/tokenSlice';
 import { useSelector } from 'react-redux';
+
 const List = () => {
   const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
   const token = useSelector(storeToken);
 
-  const [popup, setPopUp] = useState(false)
-  const [id, setId] = useState(null)
+  const [popup, setPopUp] = useState(false);
+  const [id, setId] = useState(null);
   const [foodItems, setFoodItems] = useState([]);
 
   useEffect(() => {
     fetchFoodItems();
-    
   }, []);
 
   // Function to fetch food items from the backend API
@@ -32,32 +31,34 @@ const List = () => {
     }
   };
 
-  const deleteFood = async (id)=> {
+  console.log(foodItems);
+
+  const deleteFood = async (id) => {
     try {
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/food/${id}`,{
-        headers:{
-          token:token?.payload?.token
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/food/${id}`, {
+        headers: {
+          token: token?.payload?.token
         }
-      })
-      if(response.status === 200){
-        toast.success(response.data.message)  
+      });
+      if (response.status === 200) {
+        toast.success(response.data.message);
       }
       fetchFoodItems();
-      setPopUp(!popup)
-
+      setPopUp(!popup);
     } catch (error) {
-      toast.error('Something Wrong')
+      toast.error('Something went wrong');
     }
-  }
+  };
 
   const togglePopUp = (id) => {
-    setPopUp(!popup)
-    setId(id)
-  }
-  
+    setPopUp(!popup);
+    setId(id);
+  };
+  console.log(foodItems)
+
   return (
     <div className="list-page">
-       <h2 className="list-heading">Food Items List</h2>
+      <h2 className="list-heading">Food Items List</h2>
       <div className="food-grid">
         {foodItems.map((food) => (
           <div className="food-item" key={food._id}>
@@ -68,7 +69,7 @@ const List = () => {
               <h3>{food.name}</h3>
               <p>{food.description.substring(0, 20)}</p>
               <p><strong>Price:</strong> ${food.price}</p>
-              <p><strong>Category:</strong> {food.category}</p>
+              <p><strong>Category:</strong> {food?.category?.title}</p> 
             </div>
             <div className="food-actions">
               <Link href={`edit/${food._id}`}><button className="edit-button">Edit</button></Link>
@@ -79,17 +80,15 @@ const List = () => {
       </div>
       {
         popup && <div className="popup-wrapper">
-        <div className='popUp'>
-          Are you sure you want to delete this item ?
-          <div className="button-wrapper">
-            <button onClick={togglePopUp}>Cancle</button>
-            <button onClick={() => deleteFood(id)}>Delete</button>
+          <div className='popUp'>
+            Are you sure you want to delete this item?
+            <div className="button-wrapper">
+              <button onClick={togglePopUp}>Cancel</button>
+              <button onClick={() => deleteFood(id)}>Delete</button>
+            </div>
           </div>
         </div>
-        </div>
       }
-      
-      
     </div>
   );
 };

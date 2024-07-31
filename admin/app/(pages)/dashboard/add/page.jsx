@@ -2,7 +2,7 @@
 import { assets } from '@/app/assets/assets';
 import './Add.css';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import {toast } from 'react-toastify';
 import { storeToken } from '@/app/store/tokenSlice';
@@ -12,12 +12,23 @@ function Add() {
   const url = process.env.NEXT_PUBLIC_BACKEND_API_URL;
   const token = useSelector(storeToken);
   const [image, setImage] = useState(null);
+  const [category, setCategory] = useState([]);
   const [data, setData] = useState({
     foodname: '',
     fooddescription: '',
     foodprice: '',
     foodcategory: '',
   });
+
+  const fectchCategory = async() => {
+    const response = await axios.get(`${url}/api/category/all`)
+    console.log(response)
+    setCategory(response?.data?.allCategory);
+  }
+  useEffect(() => {
+    fectchCategory();
+    
+  },[])
 
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
@@ -67,7 +78,7 @@ function Add() {
         });
         setImage(null);
         toast.success('Food item added successfully!');
-
+        fectchCategory();
         
       } else {
         toast.error('Error adding food item');
@@ -77,7 +88,9 @@ function Add() {
       alert('Failed to add food item. Please try again.');
     }
   };
-
+  console.log(category)
+  console.log(typeof category)
+  
   return (
     <div className="add-food-form">
       <h2>Add Food Item</h2>
@@ -130,14 +143,14 @@ function Add() {
             value={data.foodcategory}
           >
             <option value="">Select category</option>
-            <option value="appetizer">Appetizer</option>
-            <option value="main">Main Course</option>
-            <option value="dessert">Dessert</option>
-            <option value="drink">Drink</option>
+            { category.map((data)=>(
+                <option value={data._id}>{data.title}</option>
+            ))}
           </select>
         </div>
 
         <div className="form-group">
+            
           <label htmlFor="foodimage">Upload Image</label>
           <label className="upload-area" htmlFor="foodimage">
             <Image

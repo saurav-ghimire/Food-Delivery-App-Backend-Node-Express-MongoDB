@@ -25,7 +25,8 @@ const addFood = async (req,res) => {
 
 const getFoods =  async(req,res) => {
   try {
-    const allData = await foodModel.find();
+    const allData = await foodModel.find().populate('category');
+    
     res.json({success:true, data:allData})
   } catch (error) {
     console.log(error);

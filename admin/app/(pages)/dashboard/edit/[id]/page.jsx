@@ -15,8 +15,18 @@ function Edit({ params }) {
   const { id } = params;
   const router = useRouter();
   const [rdata, setData] = useState({});
+  const [category, setCategory] = useState([]);
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+
+  const fectchCategory = async() => {
+    const response = await axios.get(`${url}/api/category/all`)
+    setCategory(response?.data?.allCategory);
+  }
+  useEffect(() => {
+    fectchCategory();
+    
+  },[])
 
   const fetchData = async () => {
     try {
@@ -140,10 +150,11 @@ function Edit({ params }) {
             value={rdata?.category || ''}
           >
             <option value="">Select category</option>
-            <option value="appetizer">Appetizer</option>
-            <option value="main">Main Course</option>
-            <option value="dessert">Dessert</option>
-            <option value="drink">Drink</option>
+            {
+              category.map((data)=>(
+                <option value={data._id}>{data.title}</option>
+              ))
+            }
           </select>
         </div>
 

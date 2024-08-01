@@ -11,11 +11,16 @@ function Sidebar() {
   const path  = usePathname();
   return (
     <aside className="sidebar">
-      
+      <Link href="/dashboard/">
+        <div className={`sidebar-item ${path === '/add' ? 'active' : ''}`}>
+          <Image src={assets.home} alt="Add" width={24} height={24} />
+          <span>Home</span>
+        </div>
+      </Link>
       <Link href="/dashboard/add">
         <div className={`sidebar-item ${path === '/add' ? 'active' : ''}`}>
           <Image src={assets.add_icon} alt="Add" width={24} height={24} />
-          <span>Add Item</span>
+          <span>Add Food</span>
         </div>
       </Link>
       <Link href="/dashboard/list">

@@ -7,7 +7,7 @@ import axios from 'axios';
 import {toast } from 'react-toastify';
 import { storeToken } from '@/app/store/tokenSlice';
 import { useSelector } from 'react-redux';
-
+import 'react-toastify/dist/ReactToastify.css';
 function Add() {
   const url = process.env.NEXT_PUBLIC_BACKEND_API_URL;
   const token = useSelector(storeToken);

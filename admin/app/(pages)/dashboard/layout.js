@@ -28,6 +28,7 @@ export default function RootLayout({ children }) {
               {children}
             </div>
           </div>
+          <ToastContainer />
         </div>
         
       

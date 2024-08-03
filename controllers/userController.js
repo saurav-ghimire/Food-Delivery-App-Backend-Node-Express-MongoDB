@@ -2,11 +2,22 @@ import jwt from 'jsonwebtoken'
 import userModel from '../models/userModel.js'
 import bcrypt from 'bcrypt'
 import validator from 'validator'
+import axios from 'axios'
 
 
 // CreateToken
 const createToken = (id, isAdmin) => {
   return jwt.sign({id, isAdmin}, process.env.JWT_SECRET)
+}
+
+const getAllUser = async(req,res) => {
+  try {
+    const response = await userModel.find({});
+    return res.json({success:true, users:response})
+    
+  } catch (error) {
+    
+  }
 }
 
 // login user
@@ -68,5 +79,5 @@ const registerUser = async (req,res) => {
 }
 
 export {
-  loginUser, registerUser
+  loginUser, registerUser,getAllUser
 }

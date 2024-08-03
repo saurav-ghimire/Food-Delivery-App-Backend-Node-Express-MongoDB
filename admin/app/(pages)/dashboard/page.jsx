@@ -1,10 +1,12 @@
 "use client"
 import React, { useEffect, useMemo, useState } from 'react';
 import { FaShoppingCart, FaUtensils, FaListAlt, FaUsers } from 'react-icons/fa';
+import { FaAnglesRight } from "react-icons/fa6";
+
 import './Dashboard.css';
 import axios from 'axios';
-import { storeToken } from '@/app/store/tokenSlice';
 import { useSelector } from 'react-redux';
+import Link from 'next/link';
 
 
 const Dashboard = () => {
@@ -76,28 +78,37 @@ const Dashboard = () => {
   },[])
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-heading">Welcome to Dashboard,{url}</h1>
+      <h1 className="dashboard-heading">Welcome to Dashboard</h1>
       <div className="dashboard-grid">
         <div className="dashboard-card">
           <div className="dashboard-card-header">
             <FaShoppingCart className="dashboard-icon" />
             <h2 className="dashboard-card-title">Total Orders</h2>
           </div>
-          <p className="dashboard-card-value">{order}</p>
+          <div className='d-block-bottom'>
+            <p className="dashboard-card-value">{order}</p>
+            <span><Link href="/dashboard/order"><FaAnglesRight/></Link></span>
+          </div>
         </div>
         <div className="dashboard-card">
           <div className="dashboard-card-header">
             <FaUtensils className="dashboard-icon" />
             <h2 className="dashboard-card-title">Total Foods</h2>
           </div>
+          <div className='d-block-bottom'>
           <p className="dashboard-card-value">{foods}</p>
+          <span><Link href="/dashboard/list"><FaAnglesRight/></Link></span>
+          </div>
         </div>
         <div className="dashboard-card">
           <div className="dashboard-card-header">
             <FaListAlt className="dashboard-icon" />
             <h2 className="dashboard-card-title">Total Categories</h2>
           </div>
-          <p className="dashboard-card-value">{category}</p>
+          <div className='d-block-bottom'>
+            <p className="dashboard-card-value">{category}</p>
+            <span><Link href="/dashboard/allcategories"><FaAnglesRight/></Link></span>
+          </div>
         </div>
         <div className="dashboard-card">
           <div className="dashboard-card-header">

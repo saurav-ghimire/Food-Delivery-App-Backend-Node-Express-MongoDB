@@ -13,6 +13,12 @@
   color: #1c538e;
 }
 
+.d-block-bottom{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -25,6 +31,16 @@
   padding: 30px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.d-block-bottom span{
+  background-color: orangered;
+  border-radius: 4px;
+  padding: 5px;
+}
+.d-block-bottom span svg{
+  font-size: 30px;
+  color: #fff;
 }
 
 .dashboard-card:hover {

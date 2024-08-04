@@ -1,5 +1,6 @@
 import fs from 'fs';
 import foodModel from '../models/foodModel.js';
+import categoryModel from '../models/categoryModel.js';
 
 // Add Food Item
 
@@ -68,6 +69,21 @@ const getSingleFood =async(req,res) => {
   }
 }
 
+const getSingleFoodWeb =async(req,res) => {
+  try {
+    const {id} = req.params
+    const response = await foodModel.findById(id).populate('category')
+    if(!response){
+      return res.json({success:false, messaage:'Food Not Found'});
+    }
+    res.json({success:true, response})
+  } catch (error) {
+    console.log(error);
+    res.json({success:false, messaage:'Error'})
+  }
+}
+
+
 const updateFood = async (req, res) => {
   
     const {id} = req.params;
@@ -99,7 +115,7 @@ const updateFood = async (req, res) => {
      return res.status(400).json({ success: false, errors });
    }
 
-  console.log(updatedData);
+  
 
   try {
     
@@ -114,10 +130,43 @@ const updateFood = async (req, res) => {
     res.json({ success: false, message: 'Error While Updating' });
   }
 }
+const getFilteredFood = async (req, res) => {
+  const { minPrice, maxPrice, categories } = req.query;
+  try {
+    const query = {};
+
+    // Handle categories filtering
+    if (categories) {
+      const categoryNames = categories.split(',');
+      const categoryDocs = await categoryModel.find({ title: { $in: categoryNames } });
+      const categoryIds = categoryDocs.map(category => category._id);
+
+      if (categoryIds.length > 0) {
+        query.category = { $in: categoryIds };
+      }
+    }
+
+    // Handle price filtering
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = parseFloat(minPrice);
+      if (maxPrice) query.price.$lte = parseFloat(maxPrice);
+    }
+
+    // Query the food items
+    const filteredFoods = await foodModel.find(query).populate('category');
+    res.json({ success: true, data: filteredFoods });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: 'Error while filtering foods' });
+  }
+};
 export {
   addFood,
   getFoods,
   deleteFood,
   getSingleFood,
-  updateFood
+  updateFood,
+  getSingleFoodWeb,
+  getFilteredFood
 }

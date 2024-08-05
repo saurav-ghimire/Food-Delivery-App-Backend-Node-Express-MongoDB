@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import './edit.css';
 import axios from "axios";
@@ -6,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { assets } from '@/app/assets/assets';
 import Image from "next/image";
 import { toast } from 'react-toastify';
-import { storeToken } from "@/app/store/tokenSlice"; 
+import { storeToken } from "@/app/store/tokenSlice";
 import { useSelector } from "react-redux";
 
 function Edit({ params }) {
@@ -19,14 +20,14 @@ function Edit({ params }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
-  const fectchCategory = async() => {
-    const response = await axios.get(`${url}/api/category/all`)
+  const fetchCategory = async () => {
+    const response = await axios.get(`${url}/api/category/all`);
     setCategory(response?.data?.allCategory);
-  }
+  };
+
   useEffect(() => {
-    fectchCategory();
-    
-  },[])
+    fetchCategory();
+  }, [url]); 
 
   const fetchData = async () => {
     try {
@@ -50,7 +51,7 @@ function Edit({ params }) {
     if (id) {
       fetchData();
     }
-  }, [id]);
+  }, [id, url, token]);
 
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
@@ -61,7 +62,7 @@ function Edit({ params }) {
     const file = event.target.files[0];
     if (file) {
       setImage(file);
-      setImagePreview(URL.createObjectURL(file)); // Update imagePreview with the new image URL
+      setImagePreview(URL.createObjectURL(file)); 
     }
   };
 
@@ -150,17 +151,14 @@ function Edit({ params }) {
             value={rdata?.category || ''}
           >
             <option value="">Select category</option>
-            {
-              category.map((data)=>(
-                <option value={data._id}>{data.title}</option>
-              ))
-            }
+            {category.map((data) => (
+              <option key={data._id} value={data._id}>{data.title}</option> // Added key prop
+            ))}
           </select>
         </div>
 
         <div className="form-group">
           <label htmlFor="foodimage">Upload Image</label>
-          
           <label className="upload-area" htmlFor="foodimage">
             <Image
               src={imagePreview || assets.upload_area}

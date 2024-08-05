@@ -4,10 +4,11 @@ import './Add.css';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import {toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { storeToken } from '@/app/store/tokenSlice';
 import { useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
+
 function Add() {
   const url = process.env.NEXT_PUBLIC_BACKEND_API_URL;
   const token = useSelector(storeToken);
@@ -20,15 +21,18 @@ function Add() {
     foodcategory: '',
   });
 
-  const fectchCategory = async() => {
-    const response = await axios.get(`${url}/api/category/all`)
-    console.log(response)
-    setCategory(response?.data?.allCategory);
-  }
+  const fectchCategory = async () => {
+    try {
+      const response = await axios.get(`${url}/api/category/all`);
+      setCategory(response?.data?.allCategory);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
   useEffect(() => {
     fectchCategory();
-    
-  },[])
+  }, [fectchCategory]);
 
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
@@ -37,16 +41,14 @@ function Add() {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-      // Check if any required field is empty
-      const requiredFields = ['foodname', 'fooddescription', 'foodprice', 'foodcategory'];
-      const emptyFields = requiredFields.filter(field => !data[field]);
-  
-      if (emptyFields.length > 0) {
-        emptyFields.forEach(field => toast.error(`${field.replace('food', '')} is required.`));
-        return;
-      }
-      console.log(image)
-       // Check if image is empty
+    const requiredFields = ['foodname', 'fooddescription', 'foodprice', 'foodcategory'];
+    const emptyFields = requiredFields.filter(field => !data[field]);
+
+    if (emptyFields.length > 0) {
+      emptyFields.forEach(field => toast.error(`${field.replace('food', '')} is required.`));
+      return;
+    }
+
     if (!image) {
       toast.error('Image is required.');
       return;
@@ -65,10 +67,9 @@ function Add() {
       const response = await axios.post(`${url}/api/food/add`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          token:token?.payload?.token
+          token: token?.payload?.token,
         },
       });
-      console.log('response:',  response)
       if (response.data.success) {
         setData({
           foodname: '',
@@ -79,7 +80,6 @@ function Add() {
         setImage(null);
         toast.success('Food item added successfully!');
         fectchCategory();
-        
       } else {
         toast.error('Error adding food item');
       }
@@ -88,9 +88,7 @@ function Add() {
       alert('Failed to add food item. Please try again.');
     }
   };
-  console.log(category)
-  console.log(typeof category)
-  
+
   return (
     <div className="add-food-form">
       <h2>Add Food Item</h2>
@@ -104,7 +102,6 @@ function Add() {
             id="foodname"
             name="foodname"
             placeholder="Enter food name"
-            
           />
         </div>
 
@@ -116,7 +113,6 @@ function Add() {
             id="fooddescription"
             name="fooddescription"
             placeholder="Enter food description"
-            
           ></textarea>
         </div>
 
@@ -129,7 +125,6 @@ function Add() {
             id="foodprice"
             name="foodprice"
             placeholder="Enter food price"
-            
           />
         </div>
 
@@ -138,19 +133,17 @@ function Add() {
           <select
             id="foodcategory"
             name="foodcategory"
-            
             onChange={onChangeHandler}
             value={data.foodcategory}
           >
             <option value="">Select category</option>
-            { category.map((data)=>(
-                <option value={data._id}>{data.title}</option>
+            {category.map((data) => (
+              <option key={data._id} value={data._id}>{data.title}</option>
             ))}
           </select>
         </div>
 
         <div className="form-group">
-            
           <label htmlFor="foodimage">Upload Image</label>
           <label className="upload-area" htmlFor="foodimage">
             <Image
@@ -167,7 +160,6 @@ function Add() {
             name="foodimage"
             accept="image/*"
             style={{ display: 'none' }}
-            
           />
         </div>
 

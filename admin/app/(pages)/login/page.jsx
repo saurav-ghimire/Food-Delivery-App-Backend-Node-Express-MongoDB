@@ -46,7 +46,7 @@ export default function LoginPage() {
     setLoading(true); // Start loading
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/user/login`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/user/login/admin`, {
         email,
         password,
       });

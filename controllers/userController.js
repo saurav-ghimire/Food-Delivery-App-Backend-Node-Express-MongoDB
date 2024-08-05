@@ -1,83 +1,100 @@
-import jwt from 'jsonwebtoken'
-import userModel from '../models/userModel.js'
-import bcrypt from 'bcrypt'
-import validator from 'validator'
-import axios from 'axios'
-
+import jwt from 'jsonwebtoken';
+import userModel from '../models/userModel.js';
+import bcrypt from 'bcrypt';
+import validator from 'validator';
 
 // CreateToken
 const createToken = (id, isAdmin) => {
-  return jwt.sign({id, isAdmin}, process.env.JWT_SECRET)
-}
+  return jwt.sign({ id, isAdmin }, process.env.JWT_SECRET);
+};
 
-const getAllUser = async(req,res) => {
+const getAllUser = async (req, res) => {
   try {
     const response = await userModel.find({});
-    return res.json({success:true, users:response})
-    
+    return res.json({ success: true, users: response });
   } catch (error) {
-    
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server Error' });
   }
-}
+};
 
 // login user
 const loginUser = async (req, res) => {
-  const {email, password} = req.body
+  const { email, password } = req.body;
   try {
-    const user = await userModel.findOne({email});
-    if(!user){
-      return res.json({success:false, message:"User Not Found"});
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.json({ success: false, message: 'User Not Found' });
     }
     const isMatch = await bcrypt.compare(password, user.password);
-    if(!isMatch){
-      return res.json({success:false, message:"Wrong Credentials"});
+    if (!isMatch) {
+      return res.json({ success: false, message: 'Wrong Credentials' });
     }
     const token = createToken(user._id, user.isAdmin);
-    res.json({success:true, token});
+    res.json({ success: true, token });
   } catch (error) {
-    console.log(error);
-    return res.json({success:false, message:"Error"})
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error' });
   }
-}
+};
 
-
-const registerUser = async (req,res) => {
-  const {name, email, password} = req.body;
+// login admin
+const loginAdmin = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    // check user if already exist
-    const exist = await userModel.findOne({email})
-    if(exist){
-      return res.json({success:false, msg : 'User already exist'});
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.json({ success: false, message: 'User Not Found' });
+    }
+    if (!user.isAdmin) {
+      return res.json({ success: false, message: 'Not an Admin' });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.json({ success: false, message: 'Wrong Credentials' });
+    }
+    const token = createToken(user._id, user.isAdmin);
+    res.json({ success: true, token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error' });
+  }
+};
+
+const registerUser = async (req, res) => {
+  const { name, email, password } = req.body;
+  try {
+    // Check user if already exists
+    const exist = await userModel.findOne({ email });
+    if (exist) {
+      return res.json({ success: false, msg: 'User already exists' });
     }
 
-    // validating email format and strong password
-    if(!validator.isEmail(email)){
-      return res.json({success:false, msg : 'Please enter valid email'});
+    // Validating email format and strong password
+    if (!validator.isEmail(email)) {
+      return res.json({ success: false, msg: 'Please enter a valid email' });
     }
 
-    if(password.length < 8){
-      return res.json({success:false, msg : 'Minimun Password Length is 8'});
+    if (password.length < 8) {
+      return res.json({ success: false, msg: 'Minimum Password Length is 8' });
     }
 
-    // hasing user password
+    // Hashing user password
     const salt = await bcrypt.genSalt(10);
-    const hashedPass = await bcrypt.hash(password, salt)
+    const hashedPass = await bcrypt.hash(password, salt);
 
     const newUser = new userModel({
-      name : name,
-      email : email,
-      password : hashedPass,
-    })
+      name,
+      email,
+      password: hashedPass,
+    });
     const user = await newUser.save();
-    const token = createToken(user._id);
-    res.json({success:true, token})
-
-  } catch (error) { 
-    console.log(error);
-    res.json({success:false, message:"Error"})
+    const token = createToken(user._id, user.isAdmin);
+    res.json({ success: true, token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error' });
   }
-}
+};
 
-export {
-  loginUser, registerUser,getAllUser
-}
+export { loginUser, registerUser, getAllUser, loginAdmin };

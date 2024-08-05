@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from 'react';
 import './Login.css';
 import { toast } from 'react-toastify';
@@ -16,12 +15,12 @@ export default function LoginPage() {
   const dispatch = useDispatch();
   const token = useSelector(storeToken);
   const router = useRouter();
-  
-  useEffect(()=>{
-    if(token?.payload?.token){
-      router.push('/dashboard')
+
+  useEffect(() => {
+    if (token?.payload?.token) {
+      router.push('/dashboard');
     }
-  },[])
+  }, [token, router]);
 
   const handleEmail = (event) => {
     setEmail(event.target.value);
@@ -33,7 +32,7 @@ export default function LoginPage() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!email) {
       toast.error('Email is empty');
       return;
@@ -53,17 +52,17 @@ export default function LoginPage() {
 
       if (!response.data.success) {
         setError(response.data.message);
-        toast.error(response.data.message); // Show error using toast
+        toast.error(response.data.message);
       } else {
         const token = response.data.token;
-        console.log(response.data)
+        console.log(response.data);
         dispatch(storeToken(token));
         Cookies.set('token', token, { expires: 7 }); // Set token in cookies for 7 days
-        router.push('/dashboard'); // Redirect to dashboard
+        router.push('/dashboard'); 
       }
     } catch (error) {
       setError("Login failed");
-      toast.error("Login failed"); // Show error using toast
+      toast.error("Login failed");
     } finally {
       setLoading(false); // Stop loading
     }

@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from 'react';
 import './Login.css';
 import { toast } from 'react-toastify';

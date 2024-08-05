@@ -1,13 +1,14 @@
 "use client";
 import { assets } from '@/app/assets/assets';
+import 'react-toastify/dist/ReactToastify.css';
 import './Add.css';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { storeToken } from '@/app/store/tokenSlice';
 import { useSelector } from 'react-redux';
-import 'react-toastify/dist/ReactToastify.css';
+
 
 function Add() {
   const url = process.env.NEXT_PUBLIC_BACKEND_API_URL;
@@ -165,6 +166,7 @@ function Add() {
 
         <button type="submit" className="submit-button">Add Food Item</button>
       </form>
+      <ToastContainer />
     </div>
   );
 }
